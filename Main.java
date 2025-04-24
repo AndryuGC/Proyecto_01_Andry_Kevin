@@ -22,7 +22,8 @@ public class Main {
             System.out.println("8. Generar archivo de recorrido por niveles (nombre - BST)");
             System.out.println("9. Generar archivo de recorrido por niveles (apellido - AVL)");
             System.out.println("10. Generar archivo de recorrido por niveles (apodo - AVL)");
-            System.out.println("11. Salir");
+            System.out.println("11. Reconstruir árbol desde archivo de ID");
+            System.out.println("12. Salir");
             System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt();
             scanner.nextLine(); // limpiar buffer
@@ -39,6 +40,13 @@ public class Main {
                 case 9 -> GeneradorArchivos.generarArchivoRecorridoPorNivelesAVL(arbolAVL, "apellido-avl.txt");
                 case 10 -> GeneradorArchivos.generarArchivoRecorridoPorNivelesAVL(arbolAVL, "apodo-avl.txt");
                 case 11 -> {
+                    System.out.print("Nombre del archivo a Reconstruir: ");
+                    String archivo = scanner.nextLine();
+                    System.out.print("¿Que tipo de Arbol (BST o AVL)? ");
+                    String tipo = scanner.nextLine();
+                    reconstruirArbolDesdeTxt(listaContactos, archivo, tipo);
+                }
+                case 12 -> {
                     salir = true;
                     System.out.println("Saliendo...");
                 }
@@ -101,7 +109,7 @@ public class Main {
     }
 
     private static void cargarContactos() {
-        System.out.print("contacts.csv");
+        System.out.print("Escribe el nombre del archivo a cargar: ");
         String archivo = scanner.nextLine();
 
         listaContactos = GestorCSV.cargarContactosCSV(archivo);
@@ -114,5 +122,34 @@ public class Main {
         }
         contadorId = listaContactos.stream().mapToInt(Contacto::getId).max().orElse(0) + 1;
         System.out.println("Contactos Cargados.");
+    }
+
+    public static void reconstruirArbolDesdeTxt(List<Contacto> listaContactos, String archivoTxt, String tipo) {
+        List<Integer> ids = GeneradorArchivos.leerIdsDesdeTxt(archivoTxt);
+        if (tipo.equalsIgnoreCase("BST")) {
+            ArbolBST nuevoBST = new ArbolBST();
+            for (int id : ids) {
+                for (Contacto c : listaContactos) {
+                    if (c.getId() == id) {
+                        nuevoBST.insertar(c);
+                        break;
+                    }
+                }
+            }
+            System.out.println("Árbol BST reconstruido desde " + archivoTxt);
+            nuevoBST.imprimirEnOrden();
+        } else if (tipo.equalsIgnoreCase("AVL")) {
+            ArbolAVL nuevoAVL = new ArbolAVL();
+            for (int id : ids) {
+                for (Contacto c : listaContactos) {
+                    if (c.getId() == id) {
+                        nuevoAVL.insertar(c);
+                        break;
+                    }
+                }
+            }
+            System.out.println("Árbol AVL reconstruido desde " + archivoTxt);
+            nuevoAVL.imprimirEnOrden();
+        }
     }
 }
