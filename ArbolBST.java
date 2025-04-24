@@ -1,4 +1,5 @@
-//
+import java.util.*;
+
 public class ArbolBST {
     private NodoBST raiz;
 
@@ -53,5 +54,23 @@ public class ArbolBST {
             imprimirEnOrdenRec(nodo.derecho);
         }
     }
-}
 
+    public List<String> recorridoPorNiveles() {
+        List<String> resultado = new ArrayList<>();
+        Queue<NodoBST> cola = new LinkedList<>();
+        cola.add(raiz);
+
+        while (!cola.isEmpty()) {
+            NodoBST actual = cola.poll();
+            if (actual != null) {
+                resultado.add(String.valueOf(actual.contacto.getId()));
+                cola.add(actual.izquierdo);
+                cola.add(actual.derecho);
+            } else {
+                resultado.add("null");
+            }
+        }
+
+        return resultado;
+    }
+}

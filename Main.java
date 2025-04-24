@@ -1,10 +1,11 @@
 import java.util.*;
-//
+
 public class Main {
     private static Scanner scanner = new Scanner(System.in);
     private static List<Contacto> listaContactos = new ArrayList<>();
     private static ArbolBST arbolBST = new ArbolBST();
     private static ArbolAVL arbolAVL = new ArbolAVL();
+    private static int contadorId = 1;
 
     public static void main(String[] args) {
         boolean salir = false;
@@ -18,7 +19,10 @@ public class Main {
             System.out.println("5. Buscar contacto (AVL)");
             System.out.println("6. Guardar contactos en CSV");
             System.out.println("7. Cargar contactos desde CSV");
-            System.out.println("8. Salir");
+            System.out.println("8. Generar archivo de recorrido por niveles (nombre - BST)");
+            System.out.println("9. Generar archivo de recorrido por niveles (apellido - AVL)");
+            System.out.println("10. Generar archivo de recorrido por niveles (apodo - AVL)");
+            System.out.println("11. Salir");
             System.out.print("Seleccione una opción: ");
             int opcion = scanner.nextInt();
             scanner.nextLine(); // limpiar buffer
@@ -31,7 +35,10 @@ public class Main {
                 case 5 -> buscarContactoAVL();
                 case 6 -> guardarContactos();
                 case 7 -> cargarContactos();
-                case 8 -> {
+                case 8 -> GeneradorArchivos.generarArchivoRecorridoPorNivelesBST(arbolBST, "nombre-bst.txt");
+                case 9 -> GeneradorArchivos.generarArchivoRecorridoPorNivelesAVL(arbolAVL, "apellido-avl.txt");
+                case 10 -> GeneradorArchivos.generarArchivoRecorridoPorNivelesAVL(arbolAVL, "apodo-avl.txt");
+                case 11 -> {
                     salir = true;
                     System.out.println("Saliendo...");
                 }
@@ -43,20 +50,27 @@ public class Main {
     private static void agregarContacto() {
         System.out.print("Nombre: ");
         String nombre = scanner.nextLine();
+        System.out.print("Apellido: ");
+        String apellido = scanner.nextLine();
+        System.out.print("Apodo: ");
+        String apodo = scanner.nextLine();
         System.out.print("Teléfono: ");
         String telefono = scanner.nextLine();
         System.out.print("Correo: ");
         String correo = scanner.nextLine();
         System.out.print("Dirección: ");
         String direccion = scanner.nextLine();
+        System.out.print("Fecha de nacimiento (YYYYMMDD): ");
+        String fechaNacimiento = scanner.nextLine();
 
-        Contacto nuevo = new Contacto(nombre, telefono, correo, direccion);
+        Contacto nuevo = new Contacto(contadorId++, nombre, apellido, apodo, telefono, correo, direccion, fechaNacimiento);
         listaContactos.add(nuevo);
         arbolBST.insertar(nuevo);
         arbolAVL.insertar(nuevo);
 
         System.out.println("Contacto agregado correctamente.");
     }
+
 
     private static void buscarContactoBST() {
         System.out.print("Ingrese el nombre a buscar: ");
@@ -81,14 +95,15 @@ public class Main {
     }
 
     private static void guardarContactos() {
-        System.out.print("Nombre del archivo (ej: contactos.csv): ");
+        System.out.print("Inserte nombre del Archivo.csv: ");
         String archivo = scanner.nextLine();
         GestorCSV.guardarContactosCSV(listaContactos, archivo);
     }
 
     private static void cargarContactos() {
-        System.out.print("Nombre del archivo (ej: contactos.csv): ");
+        System.out.print("contacts.csv");
         String archivo = scanner.nextLine();
+
         listaContactos = GestorCSV.cargarContactosCSV(archivo);
         arbolBST = new ArbolBST();
         arbolAVL = new ArbolAVL();
@@ -97,7 +112,7 @@ public class Main {
             arbolBST.insertar(c);
             arbolAVL.insertar(c);
         }
-
-        System.out.println("Contactos cargados y árboles reconstruidos.");
+        contadorId = listaContactos.stream().mapToInt(Contacto::getId).max().orElse(0) + 1;
+        System.out.println("Contactos Cargados.");
     }
 }

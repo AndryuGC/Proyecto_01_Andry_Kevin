@@ -1,4 +1,5 @@
-//
+import java.util.*;
+
 public class ArbolAVL {
     private NodoAVL raiz;
 
@@ -99,6 +100,25 @@ public class ArbolAVL {
         y.altura = Math.max(altura(y.izquierdo), altura(y.derecho)) + 1;
 
         return y;
+    }
+
+    public List<String> recorridoPorNiveles() {
+        List<String> resultado = new ArrayList<>();
+        Queue<NodoAVL> cola = new LinkedList<>();
+        cola.add(raiz);
+
+        while (!cola.isEmpty()) {
+            NodoAVL actual = cola.poll();
+            if (actual != null) {
+                resultado.add(String.valueOf(actual.contacto.getId()));
+                cola.add(actual.izquierdo);
+                cola.add(actual.derecho);
+            } else {
+                resultado.add("null");
+            }
+        }
+
+        return resultado;
     }
 }
 
