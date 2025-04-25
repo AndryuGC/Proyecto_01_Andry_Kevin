@@ -1,17 +1,18 @@
 import java.util.*;
 
 public class Main {
-    private static Scanner scanner = new Scanner(System.in);
-    private static List<Contacto> listaContactos = new ArrayList<>();
-    private static ArbolBST arbolBST = new ArbolBST();
-    private static ArbolAVL arbolAVL = new ArbolAVL();
-    private static int contadorId = 1;
+    private static Scanner scanner = new Scanner(System.in); //Lectura de las Entradas del Usuario
+    private static List<Contacto> listaContactos = new ArrayList<>(); //Lista de Contactos en Memoria
+    private static ArbolBST arbolBST = new ArbolBST(); //Arbol (Ordenado por Nombre)
+    private static ArbolAVL arbolAVL = new ArbolAVL(); //Arbol AVL Autobalanceado (Ordenado por Nombre)
+    private static int contadorId = 1; //ID's unicos
 
     public static void main(String[] args) {
         boolean salir = false;
 
         while (!salir) {
             System.out.println("\n==== MENÚ PRINCIPAL ====");
+            System.out.println("Seleccione una opcion entre 1-12");
             System.out.println("1. Agregar contacto");
             System.out.println("2. Mostrar contactos (BST)");
             System.out.println("3. Mostrar contactos (AVL)");
@@ -71,6 +72,7 @@ public class Main {
         System.out.print("Fecha de nacimiento (YYYYMMDD): ");
         String fechaNacimiento = scanner.nextLine();
 
+        //Se crea el contacto con el ID unico
         Contacto nuevo = new Contacto(contadorId++, nombre, apellido, apodo, telefono, correo, direccion, fechaNacimiento);
         listaContactos.add(nuevo);
         arbolBST.insertar(nuevo);
@@ -108,7 +110,7 @@ public class Main {
         GestorCSV.guardarContactosCSV(listaContactos, archivo);
     }
 
-    private static void cargarContactos() {
+    private static void cargarContactos() { //Se cargan los contactos desde un CSV, y reconstruye los árboles e ID
         System.out.print("Escribe el nombre del archivo a cargar: ");
         String archivo = scanner.nextLine();
 
@@ -120,10 +122,12 @@ public class Main {
             arbolBST.insertar(c);
             arbolAVL.insertar(c);
         }
+        //Se actualiza el contador al último espacio disponible
         contadorId = listaContactos.stream().mapToInt(Contacto::getId).max().orElse(0) + 1;
         System.out.println("Contactos Cargados.");
     }
 
+    // Reconstruye un árbol desde un archivo de IDs por niveles
     public static void reconstruirArbolDesdeTxt(List<Contacto> listaContactos, String archivoTxt, String tipo) {
         List<Integer> ids = GeneradorArchivos.leerIdsDesdeTxt(archivoTxt);
         if (tipo.equalsIgnoreCase("BST")) {

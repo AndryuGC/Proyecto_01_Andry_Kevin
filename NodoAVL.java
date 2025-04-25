@@ -1,6 +1,7 @@
 //
 public class NodoAVL {
     public Contacto contacto;
+    //Hijos nodo
     public NodoAVL izquierdo;
     public NodoAVL derecho;
     public int altura;

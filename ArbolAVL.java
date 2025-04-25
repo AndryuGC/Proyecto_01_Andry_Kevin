@@ -3,24 +3,25 @@ import java.util.*;
 public class ArbolAVL {
     private NodoAVL raiz;
 
-    public void insertar(Contacto contacto) {
+    public void insertar(Contacto contacto) { //Insertar contacto en el árbol recursivamente
         raiz = insertarRec(raiz, contacto);
     }
 
     private NodoAVL insertarRec(NodoAVL nodo, Contacto contacto) {
-        if (nodo == null) return new NodoAVL(contacto);
+        if (nodo == null) return new NodoAVL(contacto); //Si es null, crea el nodo
 
+            //Imprime el nombre a la izquierda si es menor, derecha si es mayor
         if (contacto.getNombre().compareToIgnoreCase(nodo.contacto.getNombre()) < 0) {
             nodo.izquierdo = insertarRec(nodo.izquierdo, contacto);
         } else {
             nodo.derecho = insertarRec(nodo.derecho, contacto);
         }
 
-        nodo.altura = 1 + Math.max(altura(nodo.izquierdo), altura(nodo.derecho));
+        nodo.altura = 1 + Math.max(altura(nodo.izquierdo), altura(nodo.derecho)); //Actualiza la alt del nodo
 
-        int balance = getBalance(nodo);
+        int balance = getBalance(nodo); //Calcula el balance del subarbol izquierdo y derecho
 
-        // Rotaciones
+        // Balancea el arbol automaticamente
         if (balance > 1 && contacto.getNombre().compareToIgnoreCase(nodo.izquierdo.contacto.getNombre()) < 0) {
             return rotacionDerecha(nodo);
         }
@@ -43,7 +44,7 @@ public class ArbolAVL {
     }
 
     public Contacto buscar(String nombre) {
-        return buscarRec(raiz, nombre);
+        return buscarRec(raiz, nombre); //Busca el contacto recursivamente
     }
 
     private Contacto buscarRec(NodoAVL nodo, String nombre) {
@@ -60,7 +61,7 @@ public class ArbolAVL {
     }
 
     private void imprimirEnOrdenRec(NodoAVL nodo) {
-        if (nodo != null) {
+        if (nodo != null) { //Imprime el arbol en orden izquierdo, raiz, derecha (InOrder)
             imprimirEnOrdenRec(nodo.izquierdo);
             System.out.println(nodo.contacto);
             System.out.println("-------------------");
@@ -69,11 +70,11 @@ public class ArbolAVL {
     }
 
     private int altura(NodoAVL nodo) {
-        return (nodo == null) ? 0 : nodo.altura;
+        return (nodo == null) ? 0 : nodo.altura; //Devuelve la altura del nodo
     }
 
     private int getBalance(NodoAVL nodo) {
-        return (nodo == null) ? 0 : altura(nodo.izquierdo) - altura(nodo.derecho);
+        return (nodo == null) ? 0 : altura(nodo.izquierdo) - altura(nodo.derecho); //Calcula el balance
     }
 
     private NodoAVL rotacionDerecha(NodoAVL y) {
@@ -107,7 +108,7 @@ public class ArbolAVL {
         Queue<NodoAVL> cola = new LinkedList<>();
         cola.add(raiz);
 
-        while (!cola.isEmpty()) {
+        while (!cola.isEmpty()) { //Si hay un nodo, agrega su ID y pone sus hijos en la cola
             NodoAVL actual = cola.poll();
             if (actual != null) {
                 resultado.add(String.valueOf(actual.contacto.getId()));

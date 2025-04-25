@@ -8,6 +8,7 @@ public class Contacto {
     private String direccion;
     private String fechaNacimiento;
 
+    //Constructor para crear el objeto Contacto
     public Contacto(int id, String nombre, String apellido, String apodo, String telefono, String correo, String direccion, String fechaNacimiento) {
         this.id = id;
         this.nombre = nombre;
@@ -19,7 +20,6 @@ public class Contacto {
         this.fechaNacimiento = fechaNacimiento;
     }
 
-    // Getters
     public int getId() { return id; }
     public String getNombre() { return nombre; }
     public String getApellido() { return apellido; }
@@ -29,17 +29,18 @@ public class Contacto {
     public String getDireccion() { return direccion; }
     public String getFechaNacimiento() { return fechaNacimiento; }
 
-    // Setters
     public void setTelefono(String telefono) { this.telefono = telefono; }
     public void setCorreo(String correo) { this.correo = correo; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
 
     @Override
+    //Se pasa a toString para imprimir en la Consola
     public String toString() {
         return "ID: " + id + "\nNombre: " + nombre + " " + apellido + " (" + apodo + ")\nTeléfono: " + telefono +
                 "\nCorreo: " + correo + "\nDirección: " + direccion + "\nFecha de nacimiento: " + fechaNacimiento;
     }
 
+    //Se guardan los datos en el CSV
     public String toCSV() {
         return id + "," + nombre + "," + apellido + "," + apodo + "," +
                 telefono + "," + correo + "," + direccion + "," + fechaNacimiento;
